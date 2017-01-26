@@ -383,6 +383,7 @@ public class AddressBook {
             return getUsageInfoForAllCommands();
         case COMMAND_EXIT_WORD:
             executeExitProgramRequest();
+            //Exits program, no return expected.
         default:
             return getMessageForInvalidCommandInput(commandType, getUsageInfoForAllCommands());
         }
