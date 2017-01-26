@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -36,7 +38,8 @@ import java.util.Set;
  **/
 public class AddressBook {
 
-    /**
+
+	/**
      * Default file path used if the user doesn't provide the file name.
      */
     private static final String DEFAULT_STORAGE_FILEPATH = "addressbook.txt";
@@ -132,6 +135,11 @@ public class AddressBook {
     private static final String COMMAND_EXIT_WORD = "exit";
     private static final String COMMAND_EXIT_DESC = "Exits the program.";
     private static final String COMMAND_EXIT_EXAMPLE = COMMAND_EXIT_WORD;
+    
+	private static final String COMMAND_SORT_WORD = "sort";
+	private static final String COMMAND_SORT_DESC = "Lists the persons in the address book in alphabetical order.";
+	private static final String COMMAND_SORT_EXAMPLE = COMMAND_SORT_WORD;
+    private static final String SORTED_RESULT_DESC = "Sorted";
 
     private static final String DIVIDER = "===================================================";
 
@@ -182,6 +190,7 @@ public class AddressBook {
      * List of all persons in the address book.
      */
     private static final ArrayList<String[]> ALL_PERSONS = new ArrayList<>();
+
 
     /**
      * Stores the most recent list of persons shown to the user as a result of a user command.
@@ -384,12 +393,37 @@ public class AddressBook {
         case COMMAND_EXIT_WORD:
             executeExitProgramRequest();
             //Exits program, no return expected.
+        case COMMAND_SORT_WORD:
+        	return executeSortAndListAllPersonsInAddressBook();
         default:
             return getMessageForInvalidCommandInput(commandType, getUsageInfoForAllCommands());
         }
     }
 
     /**
+     * Lists the persons in the address book in alphabetical order.
+     * @return text to indicate sorting has completed
+     */
+    private static String executeSortAndListAllPersonsInAddressBook() {
+    	ArrayList<String[]> toSort = getAllPersonsInAddressBook();
+    	sort(toSort);
+    	showToUser(toSort);
+    	return SORTED_RESULT_DESC;
+	}
+
+	private static void sort(List<String[]> toSort) {
+		Collections.sort(toSort, new Comparator<String[]>(){
+
+			@Override
+			public int compare(String[] person1, String[] person2) {
+				return person1[0].toLowerCase().compareTo(person2[0].toLowerCase());
+			}
+    		
+    	});
+	}
+
+
+	/**
      * Splits raw user input into command word and command arguments string
      *
      * @return  size 2 array; first element is the command type and second element is the arguments string
@@ -502,7 +536,6 @@ public class AddressBook {
      * @return collection of transformed lower-case keywords
      */
     private static Collection<String> transformToLowerCase(Collection<String> keywords) {
-		// TODO Auto-generated method stub
     	Collection<String> transformed = new ArrayList<String>();
 		for(String s:keywords){
 			transformed.add(s.toLowerCase());
@@ -1105,7 +1138,8 @@ public class AddressBook {
                 + getUsageInfoForDeleteCommand() + LS
                 + getUsageInfoForClearCommand() + LS
                 + getUsageInfoForExitCommand() + LS
-                + getUsageInfoForHelpCommand();
+                + getUsageInfoForHelpCommand() + LS
+                + getUsageInfoForSortCommand();
     }
 
     /** Returns the string for showing 'add' command usage instruction */
@@ -1151,6 +1185,12 @@ public class AddressBook {
     private static String getUsageInfoForExitCommand() {
         return String.format(MESSAGE_COMMAND_HELP, COMMAND_EXIT_WORD, COMMAND_EXIT_DESC)
                 + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_EXIT_EXAMPLE);
+    }
+    
+    /** Returns the string for showing 'sort' command usage instruction */
+    private static String getUsageInfoForSortCommand() {
+        return String.format(MESSAGE_COMMAND_HELP, COMMAND_SORT_WORD, COMMAND_SORT_DESC)
+                + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_SORT_EXAMPLE);
     }
 
 
