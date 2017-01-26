@@ -485,8 +485,9 @@ public class AddressBook {
      */
     private static ArrayList<String[]> getPersonsWithNameContainingAnyKeyword(Collection<String> keywords) {
         final ArrayList<String[]> matchedPersons = new ArrayList<>();
+        keywords = transformToLowerCase(keywords);
         for (String[] person : getAllPersonsInAddressBook()) {
-            final Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person)));
+            final Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person).toLowerCase()));
             if (!Collections.disjoint(wordsInName, keywords)) {
                 matchedPersons.add(person);
             }
@@ -495,6 +496,21 @@ public class AddressBook {
     }
 
     /**
+     * Transforms all strings in the Collection to lower-case.
+     * 
+     * @param keywords for transformation
+     * @return collection of transformed lower-case keywords
+     */
+    private static Collection<String> transformToLowerCase(Collection<String> keywords) {
+		// TODO Auto-generated method stub
+    	Collection<String> transformed = new ArrayList<String>();
+		for(String s:keywords){
+			transformed.add(s.toLowerCase());
+		}
+		return transformed;
+	}
+
+	/**
      * Deletes person identified using last displayed index.
      *
      * @param commandArgs full command args string from the user
