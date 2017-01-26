@@ -273,12 +273,10 @@ public class AddressBook {
      * Exits if the file name is not acceptable.
      */
     private static void setupGivenFileForStorage(String filePath) {
-
         if (!isValidFilePath(filePath)) {
             showToUser(String.format(MESSAGE_INVALID_FILE, filePath));
             exitProgram();
         }
-
         storageFilePath = filePath;
         createFileIfMissing(filePath);
     }
@@ -325,7 +323,13 @@ public class AddressBook {
      */
     private static boolean hasValidParentDirectory(Path filePath) {
         Path parentDirectory = filePath.getParent();
-        return parentDirectory == null || Files.isDirectory(parentDirectory);
+        boolean hasParentDirectory;
+        if(parentDirectory == null){
+        	hasParentDirectory = false;
+        }else{
+        	hasParentDirectory = true;
+        }
+        return hasParentDirectory || Files.isDirectory(parentDirectory);
     }
 
     /**
