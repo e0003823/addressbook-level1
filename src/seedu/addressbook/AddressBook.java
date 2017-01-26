@@ -207,54 +207,13 @@ public class AddressBook {
      */
 
     public static void main(String[] args) {
-        //showWelcomeMessage();
-        showToUser(DIVIDER, DIVIDER, VERSION, MESSAGE_WELCOME, DIVIDER);
-        //processProgramArgs(args);
-        if (args.length >= 2) {
-            showToUser(MESSAGE_INVALID_PROGRAM_ARGS);
-            exitProgram();
-        } else if (args.length == 1) {
-            setupGivenFileForStorage(args[0]);
-        } else if(args.length == 0) {
-            setupDefaultFileForStorage();
-        }
-        //loadDataFromStorage();
-        initialiseAddressBookModel(loadPersonsFromFile(storageFilePath));
+        showWelcomeMessage();
+        processProgramArgs(args);
+        loadDataFromStorage();
         while (true) {
-            //String userCommand = getUserInput();
-        	System.out.print(LINE_PREFIX + "Enter command: ");
-            String inputLine = SCANNER.nextLine();
-            // silently consume all blank and comment lines
-            while (inputLine.trim().isEmpty() || inputLine.trim().charAt(0) == INPUT_COMMENT_MARKER) {
-                inputLine = SCANNER.nextLine();
-            }
-            //echoUserCommand(inputLine);
-            showToUser("[Command entered:" + inputLine + "]");
-
-            //String feedback = executeCommand(inputLine);
-            String feedback;
-            final String[] commandTypeAndParams = splitCommandWordAndArgs(inputLine);
-            final String commandType = commandTypeAndParams[0];
-            final String commandArgs = commandTypeAndParams[1];
-            switch (commandType) {
-            case COMMAND_ADD_WORD:
-                feedback = executeAddPerson(commandArgs);
-            case COMMAND_FIND_WORD:
-                feedback = executeFindPersons(commandArgs);
-            case COMMAND_LIST_WORD:
-                feedback = executeListAllPersonsInAddressBook();
-            case COMMAND_DELETE_WORD:
-                feedback = executeDeletePerson(commandArgs);
-            case COMMAND_CLEAR_WORD:
-                feedback = executeClearAddressBook();
-            case COMMAND_HELP_WORD:
-                feedback = getUsageInfoForAllCommands();
-            case COMMAND_EXIT_WORD:
-                executeExitProgramRequest();
-                //Exits program, no return expected.
-            default:
-                feedback = getMessageForInvalidCommandInput(commandType, getUsageInfoForAllCommands());
-            }
+            String userCommand = getUserInput();
+            echoUserCommand(userCommand);
+            String feedback = executeCommand(userCommand);
             showResultToUser(feedback);
         }
     }
